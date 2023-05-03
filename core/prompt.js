@@ -11,7 +11,7 @@ exports.queryGPT3 = async function queryGPT3(token, prompt) {
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 100,
+      max_tokens: 4096 - prompt,
       n: 1,
       stop: null,
       temperature: 0.2,
