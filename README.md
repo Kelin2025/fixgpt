@@ -1,6 +1,11 @@
 # fixgpt
 
-Tool that helps you refactor codebase or do some specific tasks using ChatGPT
+Tool that helps you do mass changes across your codebase
+
+## BEFORE USE!!!
+
+- Before using this tool, make sure you use Git or backup your project somewhere. LLMs are not 100% reliable and it can easily ruin things!
+- `set-token` command creates a local `.fixgpt` folder with config. Make sure to add it to `.gitignore` file of your project
 
 ## How to use?
 
