@@ -39,18 +39,3 @@ Text:
 ```
 
 Answer with the modified code. Only code, no explanations
-
-## Put it below
-
-### Prompt
-
-Find all portions with the following structure and move them to the end of the code
-
-Structure:
-[replacement]
-
-Code:
-
-```
-[input]
-```
