@@ -6,7 +6,7 @@ const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 const { refactor } = require("./core/refactor");
 
-const config_path = path.resolve(__dirname, ".fixgpt/config.json");
+const config_path = path.join(__dirname, ".fixgpt/config.json");
 
 fse.ensureFileSync(config_path);
 
