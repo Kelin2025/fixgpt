@@ -6,7 +6,7 @@ const nanoclone = require("nanoclone");
 const { queryGPT3, extractCode } = require("./prompt");
 const { parseTree } = require("./parse-tree");
 
-exports.refactor = async function refactor(template_name, files_glob) {
+exports.refactor = async function refactor(token, template_name, files_glob) {
   const templatePath = path.join(template_name);
 
   if (!fs.existsSync(templatePath)) {
@@ -37,7 +37,7 @@ exports.refactor = async function refactor(template_name, files_glob) {
         );
       }
       prompt.body = prompt.body.replaceAll("[input]", content);
-      content = extractCode(await queryGPT3(prompt.body));
+      content = extractCode(await queryGPT3(token, prompt.body));
     }
 
     fs.writeFileSync(file, content);

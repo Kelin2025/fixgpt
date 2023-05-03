@@ -1,22 +1,34 @@
 #!/usr/bin/env node
+const fs = require("fs");
+const fse = require("fs-extra");
+const path = require("path");
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
-const openai = require("openai");
 const { refactor } = require("./core/refactor");
 
-// Replace with your API key
-openai.apiKey = "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";
+const config_path = path.resolve(__dirname, ".fixgpt/config.json");
+
+fse.ensureFileSync(config_path);
 
 const argv = yargs(hideBin(process.argv))
+  .command("set-token <token>", "Set OpenAI token", {}, async (argv) => {
+    const { token } = argv;
+    fs.writeFileSync(config_path, JSON.stringify({ token }));
+  })
   .command(
     "run <template_name> <files_glob>",
     "Run refactoring helper",
     {},
     async (argv) => {
       const { template_name, files_glob } = argv;
-      await refactor(template_name, files_glob);
+      const { token } = fse.readJsonSync(config_path, "utf-8");
+      if (!token) {
+        console.error("No token found. Run `npx fixgpt token <token>` first");
+        process.exit(1);
+      }
+      await refactor(token, template_name, files_glob);
     }
   )
-  .demandCommand(1)
+  .demandCommand(2)
   .strict()
   .help().argv;

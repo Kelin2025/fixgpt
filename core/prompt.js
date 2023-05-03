@@ -1,12 +1,12 @@
 const { Configuration, OpenAIApi } = require("openai");
 const { parseMarkdown } = require("./parse-tree");
 
-const configuration = new Configuration({
-  apiKey: "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",
-});
-const openai = new OpenAIApi(configuration);
+exports.queryGPT3 = async function queryGPT3(token, prompt) {
+  const configuration = new Configuration({
+    apiKey: token,
+  });
+  const openai = new OpenAIApi(configuration);
 
-exports.queryGPT3 = async function queryGPT3(prompt) {
   try {
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
