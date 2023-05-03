@@ -11,13 +11,13 @@ const config_path = path.join(".fixgpt/config.json");
 fse.ensureFileSync(config_path);
 
 const argv = yargs(hideBin(process.argv))
-  .command("set-token <token>", "Set OpenAI token", {}, async (argv) => {
+  .command("init <token>", "Initialize with OpenAI token", {}, async (argv) => {
     const { token } = argv;
     fs.writeFileSync(config_path, JSON.stringify({ token }));
   })
   .command(
-    "run <template_name> <files_glob>",
-    "Run refactoring helper",
+    "run-template <template_name> <files_glob>",
+    "Refactor files using instruction from a template",
     {},
     async (argv) => {
       const { template_name, files_glob } = argv;

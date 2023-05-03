@@ -18,10 +18,6 @@ const icon = null
 
 ## Search
 
-### Model
-
-gpt-3.5-turbo
-
 ### Prompt
 
 Modify the code. Replace all portions with the following structure to another format
