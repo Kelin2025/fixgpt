@@ -1,0 +1,24 @@
+{
+  "name": "",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": "./cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "npmtool"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "glob": "^10.2.2",
+    "got": "^12.6.0",
+    "markdown-it": "^13.0.1",
+    "nanoclone": "^1.0.1",
+    "openai": "^3.2.1",
+    "yargs": "^17.7.2"
+  }
+}
