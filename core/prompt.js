@@ -1,7 +1,7 @@
-const { Configuration, OpenAIApi } = require("openai");
-const { parseMarkdown } = require("./parse-tree");
+import { Configuration, OpenAIApi } from "openai";
+import { parseMarkdown } from "./parse-tree.js";
 
-exports.queryGPT3 = async function queryGPT3(token, prompt) {
+export async function queryGPT3(token, messages) {
   const configuration = new Configuration({
     apiKey: token,
   });
@@ -10,21 +10,23 @@ exports.queryGPT3 = async function queryGPT3(token, prompt) {
   try {
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: 4096 - prompt,
+      messages,
       n: 1,
       stop: null,
-      temperature: 0.2,
+      temperature: 0.0,
     });
-
-    return response.data.choices[0].message.content;
+    const content = response.data.choices[0].message.content;
+    if (content.startsWith("NULL")) {
+      throw new Error(content);
+    }
+    return content;
   } catch (error) {
-    console.error("Error querying GPT-3.5:", error);
+    console.error("Error querying GPT-3.5:", error?.response?.data ?? error);
     process.exit(1);
   }
-};
+}
 
-exports.extractCode = function extractCode(text) {
+export function extractCode(text) {
   const tokens = parseMarkdown(text);
   let content = "";
 
@@ -46,4 +48,4 @@ exports.extractCode = function extractCode(text) {
   }
 
   return `${content.trim()}\n`;
-};
+}

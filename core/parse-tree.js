@@ -1,14 +1,14 @@
-const MarkdownIt = require("markdown-it");
+import MarkdownIt from "markdown-it";
 
 const md = new MarkdownIt();
 
-exports.parseMarkdown = function parseMarkdown(markdownText) {
+export function parseMarkdown(markdownText) {
   const tokens = md.parse(markdownText, {});
 
   return tokens;
-};
+}
 
-exports.parseTree = function parseTree(markdownText) {
+export function parseTree(markdownText) {
   const tokens = md.parse(markdownText, {});
   const output = {};
   let headingStack = [];
@@ -57,4 +57,4 @@ exports.parseTree = function parseTree(markdownText) {
   });
 
   return output;
-};
+}
