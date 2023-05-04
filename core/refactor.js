@@ -16,7 +16,7 @@ const system_prompt = `You're a program that edits code files. Your answers will
 
 There're three type of commands
 - Insert. I give you description, you answer only with code block.
-- Update. I give you instruction, you answer only with code block.
+- Update. I give you instruction, you answer only with code block with all changes applied.
 - Remove. I give you condition and source, you answer only with "yes" if it should be removed, or "no" otherwise
 
 If something violates your rules or following the command is impossible, answer with "NULL".

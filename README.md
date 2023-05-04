@@ -10,6 +10,8 @@ Tool that helps you do mass changes across your codebase
 ## Watch a demo
 
 - Code generation - [**link**](https://www.loom.com/share/78f5874842c9438bb18042cfd8f75e4f)
+- Mass Update - [**link**](https://www.loom.com/share/c8a44ba7d0c34d0c87fd8991556814c2)
+- Parameters - [**link**](https://www.loom.com/share/582d4e86967c4637abe27157064ba99d)
 
 ## BEFORE USE!!!
 
