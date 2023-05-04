@@ -67,8 +67,8 @@ You can put specific tokens into a template in order to ask for some data or use
 
 - `[[args.input.ArgumentName]]` - asks for `ArgumentName` **before** execution
 - `[[ask.input.ArgumentName]]` - asks for `ArgumentName` **during** execution (unlike the previous one, this one will be asked separately for each file in "Mass Update")
-- `[[responses.0.code]]` - code from task response (where `0` is an index of this task)
-- `[[responses.0.file]]` - filename from task (where `0` is an index of this task)
+- `[[responses.0.code]]` - code from task response (where `0` is an index of the task)
+- `[[responses.0.file]]` - filename from task (where `0` is an index of the task)
 
 ## TODO
 
