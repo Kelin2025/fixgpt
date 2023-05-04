@@ -4,7 +4,7 @@ Tool that helps you do mass changes across your codebase - create new files, mas
 
 ## Watch a demo
 
-- Code generation - [**link**](https://www.loom.com/share/03f0fe98d009444cb92c104cc73f0e45)
+- Code generation - [**link**](https://www.loom.com/share/78f5874842c9438bb18042cfd8f75e4f)
 
 ## BEFORE USE!!!
 
