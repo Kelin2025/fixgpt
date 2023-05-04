@@ -1,4 +1,4 @@
-import snakeCase from "lodash.snakecase";
+import { input } from "@inquirer/prompts";
 
 function constructPrompt(obj) {
   let prompt = "";
@@ -12,7 +12,12 @@ function constructPrompt(obj) {
   return prompt.trim();
 }
 
-async function injectVariables({ text, variables, responses }) {
+async function injectVariables({
+  text,
+  variables,
+  responses,
+  shouldInsertInline = true,
+}) {
   let nextText = text;
   // for (const variableName in variables) {
   //   nextText = nextText.replaceAll(
@@ -21,14 +26,8 @@ async function injectVariables({ text, variables, responses }) {
   //   );
   // }
 
-  const askRegexp = /\[\[ask\.([A-z0-9-_]+)\.([A-z0-9-_]+)\]\]/g;
-  const questions = [...nextText.matchAll(askRegexp)];
-  const alreadyAsked = [];
-  for (const match of questions) {
-    const [string, type, name] = match;
-    if (!alreadyAsked.includes(name)) {
-      nextText = nextText.replaceAll(string, await input({ message: name }));
-    }
+  if (shouldInsertInline) {
+    nextText = await injectInlineVariables({ text: nextText });
   }
 
   for (const responseIdx in responses) {
@@ -43,4 +42,20 @@ async function injectVariables({ text, variables, responses }) {
   return nextText;
 }
 
-export { constructPrompt, injectVariables };
+async function injectInlineVariables({ text }) {
+  let nextText = text;
+
+  const askRegexp = /\[\[ask\.([A-z0-9-_]+)\.([A-z0-9-_]+)\]\]/g;
+  const questions = [...nextText.matchAll(askRegexp)];
+  const alreadyAsked = [];
+  for (const match of questions) {
+    const [string, type, name] = match;
+    if (!alreadyAsked.includes(name)) {
+      nextText = nextText.replaceAll(string, await input({ message: name }));
+    }
+  }
+
+  return nextText;
+}
+
+export { constructPrompt, injectVariables, injectInlineVariables };

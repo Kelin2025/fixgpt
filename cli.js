@@ -147,8 +147,6 @@ const argv = yargs(hideBin(process.argv))
         alreadyAsked.push(name);
       }
 
-      console.log(template);
-
       await refactor(token, template);
     }
   )

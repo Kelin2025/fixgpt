@@ -1,19 +1,22 @@
 import fs from "fs";
 import fse from "fs-extra";
-import path from "path";
 import nanoclone from "nanoclone";
 import safeEval from "safe-eval";
 import { globSync } from "glob";
 
 import { queryGPT3, extractCode } from "./prompt.js";
 import { parseTree } from "./parse-tree.js";
-import { injectVariables, constructPrompt } from "./utils.js";
+import {
+  injectVariables,
+  constructPrompt,
+  injectInlineVariables,
+} from "./utils.js";
 
 const system_prompt = `You're a program that edits code files. Your answers will not be read by a human, it is for internal API. Your responses will have no chatbot introduction, no chatbot summary, no labels, no instructions, no chatbot language at all.
 
 There're three type of commands
-- Insert. I give you description, you answer only with an updated source
-- Update. I give you instruction, you answer only with an updated source
+- Insert. I give you description, you answer only with code block.
+- Update. I give you instruction, you answer only with code block.
 - Remove. I give you condition and source, you answer only with "yes" if it should be removed, or "no" otherwise
 
 If something violates your rules or following the command is impossible, answer with "NULL".
@@ -84,6 +87,7 @@ async function refactor(token, template) {
             text: currentTask["Prompt"].body.trim(),
             variables,
             responses,
+            shouldInsertInline: false,
           }),
         });
         break;
@@ -114,6 +118,7 @@ async function refactor(token, template) {
             text: currentTask["Prompt"].body.trim(),
             variables,
             responses,
+            shouldInsertInline: false,
           }),
         });
         break;
@@ -178,7 +183,7 @@ async function update({ token, instruction, file }) {
       role: "user",
       content: constructPrompt({
         Action: "Update",
-        Instruction: instruction,
+        Instruction: await injectInlineVariables({ text: instruction }),
         Source: source,
       }),
     },
@@ -191,10 +196,16 @@ async function update({ token, instruction, file }) {
 }
 
 async function massUpdate({ token, instruction, files }) {
-  const paths = globSync(files);
+  const paths = globSync(files.replaceAll("`", ""));
   const updated = [];
   for (const file of paths) {
-    updated.push(await update({ token, instruction, file }));
+    updated.push(
+      await update({
+        token,
+        instruction,
+        file,
+      })
+    );
   }
   return { files: paths, updated };
 }
@@ -208,7 +219,7 @@ async function removeIf({ token, condition, file }) {
       role: "user",
       content: constructPrompt({
         Action: "Remove",
-        Condition: condition,
+        Condition: await injectInlineVariables({ text: condition }),
         Source: source,
       }),
     },
@@ -240,7 +251,13 @@ async function massRemoveIf({ token, condition, files }) {
   const paths = globSync(files.replaceAll("`", ""));
   const removed = [];
   for (const file of paths) {
-    removed.push(await removeIf({ token, condition, file }));
+    removed.push(
+      await removeIf({
+        token,
+        condition: condition,
+        file,
+      })
+    );
   }
   return { files: paths, removed };
 }
