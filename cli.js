@@ -95,33 +95,61 @@ const argv = yargs(hideBin(process.argv))
         isAskingForTasks = await confirm({ message: "Add another task?" });
       }
 
-      isAskingForVariables = await confirm({ message: "Add variables?" });
-      while (isAskingForVariables) {
-        content += "# Variables\n";
-        const variable = await input({ message: "Variable name" });
-        content += `## ${variable}\n\n`;
-        const value = await input({ message: "Value" });
-        content += `${value}\n\n`;
-        isAskingForVariables = await confirm({
-          message: "Add another variable?",
-        });
-      }
+      // isAskingForVariables = await confirm({ message: "Add variables?" });
+      // while (isAskingForVariables) {
+      //   content += "# Variables\n";
+      //   const variable = await input({ message: "Variable name" });
+      //   content += `## ${variable}\n\n`;
+      //   const value = await input({ message: "Value" });
+      //   content += `${value}\n\n`;
+      //   isAskingForVariables = await confirm({
+      //     message: "Add another variable?",
+      //   });
+      // }
 
       fs.writeFileSync(template_name, content);
     }
   )
   .command(
     "run-template <template_name>",
-    "Refactor files using instruction from a template",
+    "Run tasks from a template",
     {},
     async (argv) => {
       const { template_name } = argv;
+
+      // Read token
       const { token } = fse.readJsonSync(config_path, "utf-8");
       if (!token) {
         console.error("No token found. Run `npx fixgpt token <token>` first");
         process.exit(1);
       }
-      await refactor(token, template_name);
+
+      // Read template
+      const templatePath = path.join(template_name);
+      if (!fs.existsSync(templatePath)) {
+        console.error(`Template '${template_name}' not found.`);
+        process.exit(1);
+      }
+      let template = fs.readFileSync(templatePath, "utf8");
+
+      // Ask for initial arguments
+      const argsRegexp = /\[\[args\.([A-z0-9-_]+)\.([A-z0-9-_]+)\]\]/g;
+      const args = [...template.matchAll(argsRegexp)];
+      const alreadyAsked = [];
+      for (const match of args) {
+        const [string, type, name] = match;
+        if (!alreadyAsked.includes(name)) {
+          template = template.replaceAll(
+            string,
+            await input({ message: name })
+          );
+        }
+        alreadyAsked.push(name);
+      }
+
+      console.log(template);
+
+      await refactor(token, template);
     }
   )
   .demandCommand(2)

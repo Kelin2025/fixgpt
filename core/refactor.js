@@ -19,15 +19,7 @@ There're three type of commands
 If something violates your rules or following the command is impossible, answer with "NULL".
 `;
 
-async function refactor(token, template_name) {
-  const templatePath = path.join(template_name);
-
-  if (!fs.existsSync(templatePath)) {
-    console.error(`Template '${template_name}' not found.`);
-    process.exit(1);
-  }
-
-  const template = fs.readFileSync(templatePath, "utf8");
+async function refactor(token, template) {
   const templateData = parseTree(template);
   const tasks = templateData["Tasks"] ?? {};
   const variables = templateData["Variables"]?.children ?? {};
@@ -43,7 +35,7 @@ async function refactor(token, template_name) {
     switch (action) {
       case "Read":
         response = await read({
-          file: injectVariables({
+          file: await injectVariables({
             text: currentTask["File"].body.trim(),
             variables,
             responses,
@@ -53,12 +45,12 @@ async function refactor(token, template_name) {
       case "Create":
         response = await create({
           token,
-          file: injectVariables({
+          file: await injectVariables({
             text: currentTask["File"].body.trim(),
             variables,
             responses,
           }),
-          instruction: injectVariables({
+          instruction: await injectVariables({
             text: currentTask["Prompt"].body.trim(),
             variables,
             responses,
@@ -68,12 +60,12 @@ async function refactor(token, template_name) {
       case "Update":
         response = await update({
           token,
-          file: injectVariables({
+          file: await injectVariables({
             text: currentTask["File"].body.trim(),
             variables,
             responses,
           }),
-          instruction: injectVariables({
+          instruction: await injectVariables({
             text: currentTask["Prompt"].body.trim(),
             variables,
             responses,
@@ -83,12 +75,12 @@ async function refactor(token, template_name) {
       case "Mass Update":
         response = await massUpdate({
           token,
-          files: injectVariables({
+          files: await injectVariables({
             text: currentTask["Files"].body.trim(),
             variables,
             responses,
           }),
-          instruction: injectVariables({
+          instruction: await injectVariables({
             text: currentTask["Prompt"].body.trim(),
             variables,
             responses,
@@ -98,12 +90,12 @@ async function refactor(token, template_name) {
       case "Remove":
         response = await removeIf({
           token,
-          file: injectVariables({
+          file: await injectVariables({
             text: currentTask["File"].body.trim(),
             variables,
             responses,
           }),
-          condition: injectVariables({
+          condition: await injectVariables({
             text: currentTask["Prompt"].body.trim(),
             variables,
             responses,
@@ -113,12 +105,12 @@ async function refactor(token, template_name) {
       case "Mass Remove":
         response = await massRemoveIf({
           token,
-          files: injectVariables({
+          files: await injectVariables({
             text: currentTask["Files"].body.trim(),
             variables,
             responses,
           }),
-          condition: injectVariables({
+          condition: await injectVariables({
             text: currentTask["Prompt"].body.trim(),
             variables,
             responses,
@@ -130,7 +122,7 @@ async function refactor(token, template_name) {
           token,
           file,
           code: extractCode(
-            injectVariables({
+            await injectVariables({
               text: currentTask["Code"].body.trim(),
               variables,
               responses,
