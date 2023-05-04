@@ -13,10 +13,6 @@ Tool that helps you do mass changes across your codebase
 - Mass Update - [**link**](https://www.loom.com/share/c8a44ba7d0c34d0c87fd8991556814c2)
 - Parameters - [**link**](https://www.loom.com/share/582d4e86967c4637abe27157064ba99d)
 
-## BEFORE USE!!!
-
-Before using this tool, make sure you use Git or backup your project somewhere. LLMs are not 100% reliable and it can easily ruin things!
-
 ## Installation
 
 Install from NPM:
@@ -30,6 +26,14 @@ Or just use NPX:
 ```bash
 npx fixgpt <command> <arg1> <arg2>
 ```
+
+## Before use
+
+`fixgpt` will go over your files and will edit them according your request.
+
+It is recommeneded to use GIT (or other VCS) and check the diff of changes yourself, once `fixgpt` is done.
+
+It is necessary as LLM models are not 100% safe at producing reliable code.
 
 ## How to use?
 
