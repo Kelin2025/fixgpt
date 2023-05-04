@@ -1,6 +1,11 @@
 # fixgpt
 
-Tool that helps you do mass changes across your codebase - create new files, mass update the others, remove them on a certain condition etc.
+Tool that helps you do mass changes across your codebase
+
+- Create new files
+- Mass refactoring
+- Remove files upon certain conditions
+- Code execution
 
 ## Watch a demo
 
@@ -68,7 +73,7 @@ You can put specific tokens into a template in order to ask for some data or use
 ## TODO
 
 - [x] Create/remove files API
-- [ ] Take variables from CLI
+- [x] Take variables from CLI
 - [ ] Run without template
 - [ ] Run another template
 - [ ] Support other models (only GPT 3.5 for now)
