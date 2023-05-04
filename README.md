@@ -80,3 +80,7 @@ You can put specific tokens into a template in order to ask for some data or use
 - [ ] Run another template
 - [ ] Support other models (only GPT 3.5 for now)
 - [ ] Parallel threads support
+
+## Support
+
+[![Buy Me a Coffee](https://storage.ko-fi.com/cdn/kofi2.png?v=3)](https://ko-fi.com/M4M3KZ70G)
